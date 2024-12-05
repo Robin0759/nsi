@@ -10,7 +10,7 @@ class Cellule:
         self.x = x
         self.y = y
 
-    #est_vivant : renvoie l'état actueel de la cellule
+    #est_vivant : renvoie l'état actuel de la cellule
     def est_vivant(self):
         if self.actuel == True:
             return True
@@ -40,28 +40,26 @@ class Cellule:
     
     # basculer : met à jour les états des Cellule
     def basculer(self):
-        self.futur = self.actuel
+        self.actuel = self.futur
     
 
     # __str__ : renvoie l'élément défini quand la fonction est appelée en tant que string
     def __str__(self) -> str:
-        if self.actuel == True:
-            return 'x'
-        else:
-            return '-'
+        return 'x' if self.actuel else '-'
     
 
     # fais les actions nécessaires à l'évolution du jeu de la vie
     def calcule_etat_futur(self):
+        nb_voisins = len(self.voisins)
         if self.actuel == True:
-            if self.voisins == 2 or self.voisins == 3:
-                pass
+            if nb_voisins != 2 or nb_voisins != 3:
+                self.futur = False
             else:
-                self.actuel == False
+                self.futur = True
         
-        elif self.actuel == False:
+        else:
             if self.voisins == 3:
-                self.actuel == True
+                self.futur = True
 
 
 
@@ -69,12 +67,12 @@ class Grille:
     def __init__(self, largeur, hauteur):
         self.largeur = largeur
         self.hauteur = hauteur
-        self.matrix = [[Cellule(largeur, hauteur) for _ in range(largeur)] for _ in range(hauteur)]
-        cellule = Cellule(largeur, hauteur)
+        self.matrix = [[Cellule(x, y) for x in range(largeur)] for y in range(hauteur)]
+        self.cellule = Cellule(largeur, hauteur)
 
 
     def dans_grille(self, x, y):
-        if 0 < x < self.largeur or 0 < y < self.hauteur:
+        if 0 <= x < self.largeur and 0 <= y < self.hauteur:
             return True
 
     def setXY(self, x, y):
@@ -110,8 +108,6 @@ class Grille:
         return self.cellule.voisins
 
 
-    def get_voisins(self):
-        return self.cellule.voisins
 
     def affecte_voisins(self):
         for _ in self.hauteur:
@@ -119,18 +115,37 @@ class Grille:
                 self.get_voisins()
 
     def __str__(self):
-        for i in range(self.largeur):
-            for j in range(self.hauteur):
-                return Cellule(i, j)
-
+        grille_str = ""
+        for ligne in self.matrix:
+            grille_str += "".join(str(cell) for cell in ligne) + "\n"
+        return grille_str
 
     def remplir_alea(self, taux):
-        rand1 = random.randint(1, self.hauteur)
-        rand2 = random.randint(1, self.largeur)
-        for i in range(rand1):
-            for j in range(rand2):
-                self.matrix[i][j].actuel = True
+        for ligne in self.matrix:
+            for cell in ligne:
+                cell.actuel = random.random() < taux
+
+    def jeu(self):
+        # Calculer l'état futur de toutes les cellules
+        for ligne in self.matrix:
+            for cell in ligne:
+                cell.calcule_etat_futur()
 
 
 
-print(str(Grille(10,10)))
+    def actualise(self):
+        for ligne in self.matrix:
+            for cell in ligne:
+                cell.basculer()
+    
+
+def main():
+    grille = Grille(10, 10)
+    grille.remplir_alea(0.1)
+    print(str(grille))
+    grille.jeu()
+    grille.actualise()
+    print(str(grille))
+
+
+main()
