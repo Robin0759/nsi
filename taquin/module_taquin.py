@@ -107,6 +107,6 @@ class Taquin:
         
         chaine = f'+----+----+----+----+\n|{element}|{element}|{element}|{element}|\n+----+----+----+----+\n|{element}|{element}|{element}|{element}|\n+----+----+----+----+\n|{element}|{element}|{element}|{element}|\n+----+----+----+----+\n|{element}|{element}|{element}|{element}|\n+----+----+----+----+'
         return chaine
-
+        #ne fonctionne pas, prend le dernier indice pour 'element'
 t = Taquin()
 print(str(t))
