@@ -84,7 +84,7 @@ class Taquin:
         '''
 
         if self.dans_intervale(indice):
-            if self.grille[indice] == 0:
+            if self.acc_valeur(indice) == 0:
                 return True
             else:
                 return False
@@ -119,7 +119,7 @@ class Taquin:
         '''
         if self.dans_intervale(valeur):
             #initialise les conditions
-            index_valeur = self.grille.index(valeur)
+            index_valeur = self.acc_indice(valeur)
             index_case_vide = self.grille.index(0)
 
             x_valeur = index_valeur % 4
@@ -127,7 +127,7 @@ class Taquin:
 
             x_case_vide = index_case_vide % 4
             y_case_vide = index_case_vide // 4
-            # distance de Manattan
+            # distance de Manhattan
             if abs(x_valeur-x_case_vide) + abs(y_valeur-y_case_vide) == 1:
                 return True
             else:
@@ -147,7 +147,7 @@ class Taquin:
         '''
         if self.est_possible(valeur):
             index_nb_demande = self.grille.index(0)
-            index_nb_echange = self.grille.index(valeur)
+            index_nb_echange = self.acc_indice(valeur)
 
             valeur_nb_demande = self.grille[self.grille.index(0)]
             valeur_nb_echange = valeur
